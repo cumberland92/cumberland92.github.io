@@ -90,7 +90,8 @@ moon.position.z = 30;
 moon.position.setX(-10);
 
 cord.position.z = -5;
-cord.position.x = 2;
+cord.position.x = -2.7;
+cord.position.y= 0;
 
 // Scroll Animation
 
