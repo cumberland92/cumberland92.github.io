@@ -27,6 +27,14 @@ const torus = new THREE.Mesh(geometry, material);
 
 scene.add(torus);
 
+// Avatar
+
+const cordTexture = new THREE.TextureLoader().load('../niceDenverPicCropped.jpg');
+
+const cord = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: cordTexture }));
+
+scene.add(cord);
+
 // Lights
 
 const pointLight = new THREE.PointLight(0xffffff);
@@ -62,14 +70,6 @@ Array(200).fill().forEach(addStar);
 
 const spaceTexture = new THREE.TextureLoader().load('space.jpg');
 scene.background = spaceTexture;
-
-// Avatar
-
-const cordTexture = new THREE.TextureLoader().load('../niceDenverPicCropped.jpg');
-
-const cord = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: cordTexture }));
-
-scene.add(cord);
 
 // Moon
 
