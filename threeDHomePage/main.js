@@ -28,7 +28,6 @@ const torus = new THREE.Mesh(geometry, material);
 scene.add(torus);
 
 // Avatar
-
 const cordTexture = new THREE.TextureLoader().load('../threeDHomePage/niceDenverPicCropped.jpg');
 
 const cord = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: cordTexture }));
