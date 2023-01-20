@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<head>
+    <title>
+        Works?
+    </title>
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+    <h1>Please enter the kneading sequence for which you'd like to build the tree.<br>We will assume your sequence is periodic.</h1>
+  <p>Please view this page on desktop.</p>
+    <input id="new-task-content" class="py-input" type="text">
+    <button id="new-task-btn" class="py-button" type="submit" py-click="start()">
+    make the tree
+    </button>
+    <center>
+        <div id="mpl"></div>
+    </center>
+        <py-config>
+        packages = [
+            "matplotlib",
+            "networkx"
+        ]
+        </py-config>
+        <py-script>
+            from pyodide.ffi import to_js
+            from js import (
+                  console,
+                  document,
+                  devicePixelRatio,
+                  ImageData,
+                  Uint8ClampedArray,
+                  CanvasRenderingContext2D as Context2d,
+                  requestAnimationFrame,
+              )
+
+            import networkx as nx
+            from collections import Counter
+            import matplotlib.pyplot as plt
+            import math
+
+            def shift(sequence):
+                listOfSequence = list(sequence)
+                firstDigit = listOfSequence[0]
+                listOfSequence.remove(firstDigit)
+                listOfSequence.append(firstDigit)
+                return(''.join(listOfSequence))
+            
+            def vote(a,b,c, tau):
+                firstDigits = [a[0], b[0], c[0]]
+                data = Counter(firstDigits)
+                mostCommon = data.most_common(1)
+                if(mostCommon[0][1] == 1):
+                    nextChar=tau
+                else:
+                    nextChar = mostCommon[0][0]
+
+                    if(a[0] == nextChar):
+                        a = shift(a)
+                    else:
+                        a = shift(tau)
+
+                    if(b[0] == nextChar):
+                        b = shift(b)
+                    else:
+                        b = shift(tau)
+
+                    if(c[0] == nextChar):
+                        c = shift(c)
+                    else:
+                        c = shift(tau)
+                
+                return(nextChar, a, b, c)
+
+            def votingSequence(a, b, c, tau):
+                sequence=""
+                n = 0
+                while(n < len(tau)):
+                    nextChar, a, b, c = vote(a, b, c, tau)
+                    sequence = sequence + nextChar
+                    if(nextChar == tau):
+                        return sequence
+                    n+=1
+                return sequence
+
+            
+            def calculateSimpleArcs(branchPoints, tau, m):
+                simpleArcs=[]
+                for i in range(0, len(branchPoints)-1):
+                    for j in range(i+1, len(branchPoints)):
+                        for k in range(0, len(branchPoints)):
+                            if((branchPoints[k] == branchPoints[i] or branchPoints[k]==branchPoints[j]) and j!=len(branchPoints)-1):
+                                continue
+                            else:
+                                otherTry = votingSequence(branchPoints[i], branchPoints[j], branchPoints[k], tau)
+                                otherTry = otherTry[:m]
+                                if(not(otherTry == branchPoints[i] or otherTry == branchPoints[j])):
+                                    break
+                                else:
+                                    if (k==len(branchPoints)-1):
+                                        simpleArcs.append([i,j])
+                return(simpleArcs)
+            
+            
+            def isItValid(tau):
+                shiftyBoy = tau
+                for n in range(len(tau)-1):
+                    shiftyBoy = shift(shiftyBoy)
+                    notAdmiss=True
+                    for j in range(0, len(tau)):
+                        if((shiftyBoy[j]!=tau[j]) and (shiftyBoy[j]!="0") and (tau[j]!="0")):
+                            notAdmiss = False
+                            continue
+                    if(notAdmiss):
+                        return False
+                return True
+
+
+            def calculateSimpleArcs(branchPoints, tau, m):
+                simpleArcs=[]
+                for i in range(0, len(branchPoints)-1):
+                    for j in range(i+1, len(branchPoints)):
+                        for k in range(0, len(branchPoints)):
+                            if((branchPoints[k] == branchPoints[i] or branchPoints[k]==branchPoints[j]) and j!=len(branchPoints)-1):
+                                continue
+                            else:
+                                otherTry = votingSequence(branchPoints[i], branchPoints[j], branchPoints[k], tau)
+                                otherTry = otherTry[:m]
+                                if(not(otherTry == branchPoints[i] or otherTry == branchPoints[j])):
+                                    break
+                                else:
+                                    if (k==len(branchPoints)-1):
+                                        simpleArcs.append([i,j])
+                return(simpleArcs)
+
+
+            def MakeTree(tau):
+                plt.subplot(111)
+                plt.clf()
+                plot_div = Element("mpl")
+                plot_div.clear
+                ogTau=tau
+                n=3*len(tau) #you can change this number to make the itinerary of points longer
+
+
+                endPoints=[]
+                #tauIsPeriodic = False
+
+                
+                endPoints = [tau]
+                #tau = tau*3
+                m=len(tau)
+                
+                for k in range(len(tau)-1):
+                    tau = shift(tau)
+                    endPoints.append(tau)
+
+
+                tau=endPoints[0]
+                #print("endpoints are {}".format(endPoints))
+
+                branchPoints=endPoints[:]
+
+                for i in range(0, len(branchPoints)-2):
+                    for j in range(i+1, len(branchPoints)-1):
+                        for k in range(j+1, len(branchPoints)):
+                            delta = votingSequence(branchPoints[i], branchPoints[j], branchPoints[k], tau)
+                            delta = delta[:len(tau)]
+                            if(delta == "1110"):
+                                print("the bad boys are {}, {}, {}".format(branchPoints[i], branchPoints[j], branchPoints[k]))
+
+                            if delta not in branchPoints:
+                                branchPoints.append(delta)
+
+
+
+
+
+                listOfSimpleArcs = calculateSimpleArcs(branchPoints, tau, m)
+                for k in range(0, len(branchPoints)):
+                    strToAdd = "{} = {}".format(k, branchPoints[k])
+                    print(strToAdd)
+                    lengthOfItAll = len(strToAdd)
+                underscores="_"*lengthOfItAll
+                print(underscores)
+                
+
+
+                G= nx.Graph()
+                if len(listOfSimpleArcs)==0:
+                    print("No simple arcs I guess")
+
+                for k in range(len(listOfSimpleArcs)):
+                    G.add_edge(listOfSimpleArcs[k][0], listOfSimpleArcs[k][1])
+
+                #G=removeInteriorPoints(G) #remove this if you want to see the whole tree in it's entirety
+                plt.subplot(111)
+                nx.draw_planar(G, with_labels=True, font_weight='bold')
+                #nx.draw(G, with_labels=True, font_weight='bold')
+                plt.draw()
+                #plt.title("tau={} \n".format(ogTau)) 
+                display(plt, target="mpl")
+
+                #return(G)
+
+            def isItValid(tau):
+                shiftyBoy = tau
+                for n in range(len(tau)-1):
+                    shiftyBoy = shift(shiftyBoy)
+                    notAdmiss=True
+                    for j in range(0, len(tau)):
+                        if((shiftyBoy[j]!=tau[j]) and (shiftyBoy[j]!="*") and (tau[j]!="*")):
+                            notAdmiss = False
+                            continue
+                    if(notAdmiss):
+                        return False
+                return True
+
+            def start(*ags, **kws):
+                
+                usrKneadSeq = Element("new-task-content")
+                tau = usrKneadSeq.element.value
+                
+                #tau = tau.replace("0", "2")
+                #tau = tau.replace("*", "0")
+                print(tau)
+                itIsValid = isItValid(tau)
+                if(itIsValid):
+                    MakeTree(tau)
+                else:
+                    print("This kneading sequence is not acceptable")
+        </py-script>
+    
+</body>
