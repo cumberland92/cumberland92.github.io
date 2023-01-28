@@ -3,6 +3,9 @@
     <title>
         Hubbard Trees
     </title>
+    <style>
+        p { margin: 0; }
+    </style>
     <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
 <script defer src="https://pyscript.net/latest/pyscript.js"></script>
 </head>
@@ -16,6 +19,7 @@
     <center>
         <div id="mpl"></div>
     </center>
+    <div id="what-points-are-what" style="background-color: black; color: white;"></div>
         <py-config>
         packages = [
             "matplotlib",
@@ -138,7 +142,7 @@
                 plt.subplot(111)
                 plt.clf()
                 plot_div = Element("mpl")
-                plot_div.clear
+                plot_div.clear()
                 ogTau=tau
                 n=3*len(tau) #you can change this number to make the itinerary of points longer
 
@@ -177,12 +181,17 @@
 
 
                 listOfSimpleArcs = calculateSimpleArcs(branchPoints, tau, m)
+                strToAdd=""
                 for k in range(0, len(branchPoints)):
-                    strToAdd = "{} = {}".format(k, branchPoints[k])
-                    print(strToAdd)
-                    lengthOfItAll = len(strToAdd)
-                underscores="_"*lengthOfItAll
-                print(underscores)
+                    strToAdd += "<p>{} = {}</p>".format(k, branchPoints[k])
+                    #print(strToAdd)
+                    #lengthOfItAll = len(strToAdd)
+                #underscores="_"*lengthOfItAll
+                #print(underscores)
+                listDiv=Element("what-points-are-what")
+                listDiv.clear()
+                listDiv.element.innerHTML = strToAdd
+
                 
 
 
@@ -223,7 +232,7 @@
                 
                 #tau = tau.replace("0", "2")
                 #tau = tau.replace("*", "0")
-                print(tau)
+                #print(tau)
                 itIsValid = isItValid(tau)
                 if(itIsValid):
                     MakeTree(tau)
