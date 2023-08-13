@@ -11,27 +11,84 @@
             background-image: url("../Fun Things/fun things are fun.jpg");
             background-color: #efeeec;
         }
-        a,p{
-            background-color: #efeeec;
-          }
+  
+        .navBar{
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #4a76b1;
+        }
+        .navLi{
+            float: left;
+        }
+
+        .navA{
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;            
+        }
+
+
+        li a:hover {
+    background-color: #5487c9;
+  }
     </style>
 </head>
 <body>
-    <a href="index.html">
-        <div style="background-color: #efeeec;">
-            <p>Home</p>
-        </div>
-    </a>
+    <header>
+        <ul class="navBar">
+            <li class="navLi">
+              <a class="navA" href="/">
+                Home
+              </a>
+            </li>
+      
+            <li class="navLi">
+              <a class="navA" href="/about-me">
+                About Me
+              </a>
+            </li>
+      
+            <li class="navLi">
+              <a class="navA" href="/pagecv">
+                CV
+              </a>
+            </li>
+      
+            <li class="navLi">
+              <a class="navA" href="/research">
+                Research
+              </a>
+            </li>
+      
+            <li class="navLi">
+              <a class="navA" style = "background-color: #6cacff;" class="active" href="../Fun Things/">
+                Fun Things
+              </a>
+            </li>
+      
+            <li class="navLi">
+              <a class="navA" href="/contact">
+                Contact
+              </a>
+          </li>
+        </ul>
+    </header>
 
-    <p>This page serves as a landing page for fun side projects.</p>
-    <p>Here they are, in no particular order.</p>
-    <ul>
-        <li><a href="../threeDHomePage/">A 3D Webpage (using three.js)</a></li>
-        <li><a href="../string_of_consonants/">Find out how many strings of consonants can be made by removing vowels from different words.</a></li>
-        <li><a href="../hubbard trees/">Create a Hubbard tree from nothing more than a kneading sequence</a></li>
-        <li><a href="../HubbardTreeVideo/">Watch a video of a Hubbard tree in action</a></li>
-        <li><a href="Fun Things/Cordell_Hammon_Dissertation.pdf">My Dissertation</a></li>
-    </ul>
+    <div style = "background-color: #efeeec;">
+        <p>This page serves as a landing page for fun side projects.</p>
+        <p>Here they are, in no particular order.</p>
+        <ul>
+            <li><a href="../threeDHomePage/">A 3D Webpage (using three.js)</a></li>
+            <li><a href="../string_of_consonants/">Find out how many strings of consonants can be made by removing vowels from different words.</a></li>
+            <li><a href="../hubbard trees/">Create a Hubbard tree from nothing more than a kneading sequence</a></li>
+            <li><a href="../HubbardTreeVideo/">Watch a video of a Hubbard tree in action</a></li>
+            <li><a href="Fun Things/Cordell_Hammon_Dissertation.pdf">My Dissertation</a></li>
+        </ul>
+    </div>
 
 </body>
 </html>
